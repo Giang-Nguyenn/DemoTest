@@ -1,24 +1,36 @@
 package com.example.DemoTest.service;
 
-import com.example.DemoTest.core.Sign;
+import com.example.DemoTest.core.UploadFile;
+import com.example.DemoTest.core.auth.Sign;
+import com.example.DemoTest.exception.AlreadyExistsException;
+import com.example.DemoTest.exception.NotFoundException;
+import com.example.DemoTest.model.CustomUserDetails;
 import com.example.DemoTest.model.User;
+import com.example.DemoTest.repository.IRoleRepository;
 import com.example.DemoTest.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
+import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService implements UserDetailsService {
     @Autowired
-    IUserRepository userRepository;
-//    @Autowired
-//    private RoleRepository roleRepository;
+    private IUserRepository userRepository;
+
+    @Autowired
+    private IRoleRepository roleRepository;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -28,30 +40,30 @@ public class UserService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException(username);
         }
-//        return new CustomUserDetails(user);
-        return null;
+        return new CustomUserDetails(user);
+    }
+    public User save(User user){
+        return userRepository.save(user);
     }
 
-    public String saveUserSign(Sign sign) throws Exception {
+    public User saveUserSign(Sign sign){
         User user=new User();
-        if (userRepository.existsByUserName(sign.getUserName())) throw new Exception("Username đã tồn tại");
+        if (userRepository.existsByUserName(sign.getUserName())) throw new AlreadyExistsException(String.format("Username %s AlreadyExists",sign.getUserName()));
         user.setUserName(sign.getUserName());
         user.setPassWord(passwordEncoder.encode(sign.getPassWord()));
+        user.setRole(roleRepository.findByName("USER"));
         userRepository.save(user);
-        return "success";
+        return user;
     }
 
-//    @Transactional
-//    public UserDetails loadUserById(Long id) {
-//        User user = userRepository.findById(id).orElseThrow(
-//                () -> new UsernameNotFoundException("User not found with id : " + id)
-//        );
-//        return new CustomUserDetails(user);
-//    }
+    @Transactional
+    public UserDetails loadUserById(Long id) {
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new UsernameNotFoundException("User not found with id : " + id)
+        );
+        return new CustomUserDetails(user);
+    }
 
-//    public List<User> getAll(){
-//        return (List<User>) userRepository.findAll();
-//    }
 //    public List<String> save(User user){
 //        List<String> lmessage=new ArrayList<>();
 //        if (userRepository.findByUserName(user.getUserName()) !=null)  lmessage.add("username đã tồn tại");
@@ -63,14 +75,33 @@ public class UserService implements UserDetailsService {
 //        }
 //        return lmessage;
 //    }
-    public String delete(long id){
-        if (!userRepository.findById(id).isPresent()) throw new UsernameNotFoundException("User not found with id : " + id);
+    public Boolean delete(long id){
+        if (!userRepository.findById(id).isPresent()) throw new NotFoundException("User not found with id : " + id);
         userRepository.deleteById(id);
-        return "success";
+        return true;
     }
-//    public User findByUserName(String username){
-//        return userRepository.findByUserName(username);
-//    }
+    public User findByUserName(String username){
+        return userRepository.findByUserName(username);
+    }
+    public User findUserById(Long id){
+        User user=userRepository.findById(id).orElseThrow(
+                () -> new UsernameNotFoundException("User not found with id : " + id));
+        return user;
+    }
+    public Page<User> findAll(Pageable pageable){
+        return userRepository.findAll(pageable);
+    }
+    @Transactional
+    public String uploadImage(Long id ,MultipartFile file) throws IOException {
+        Optional optional=userRepository.findById(id);
+        if(!optional.isPresent()) throw new NotFoundException("User not found with id : " + id);
+        UploadFile uploadFile=new UploadFile();
+        String url = uploadFile.upload(id,file);
+        User user= (User) optional.get();
+        user.setImage(url);
+        userRepository.save(user);
+        return url;
+    }
 
 
 }

@@ -1,4 +1,19 @@
 package com.example.DemoTest.core;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+
+
 public class UploadFile {
+    private String urlImage ="/home/nguyen/Desktop";
+
+    public String upload(Long id,MultipartFile file) throws IOException {
+        String url= String.format("%s/DemoTest/Image/%s",urlImage,id);
+        file.transferTo(new File(url));
+        return url ;
+    }
 }

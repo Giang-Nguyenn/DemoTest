@@ -1,4 +1,4 @@
-package com.example.DemoTest.core;
+package com.example.DemoTest.core.auth;
 
 import lombok.Data;
 
@@ -7,9 +7,9 @@ import javax.validation.constraints.Pattern;
 @Data
 public class Sign {
     @NotBlank
-    @Pattern(regexp = "^[A-Za-z][A-Za-z0-9_]{5,29}$",message = "userName is not valid")
+    @Pattern(regexp = "^[a-z0-9]{6,15}$",message = "userName is not valid")
     String userName;
-    @Pattern(regexp = "^[A-Za-z][A-Za-z0-9_]{7,}$")
+    @Pattern(regexp = "^[a-z0-9]{6,20}$")
     @NotBlank
     String passWord;
 }
