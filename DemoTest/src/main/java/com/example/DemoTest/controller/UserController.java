@@ -35,7 +35,7 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<UserDTO> listUser(Pageable pageable){
         System.out.println(pageable.toString());
-        Page<User> listUsers = userService.findAll(pageable);
+        List<User> listUsers = userService.findAllUser(pageable);
         List<UserDTO> userDTOS=IUserMapper.INSTANCE.userToListDTO(listUsers);
         return userDTOS;
     }

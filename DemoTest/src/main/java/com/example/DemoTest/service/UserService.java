@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -87,8 +88,8 @@ public class UserService implements UserDetailsService {
                 () -> new UsernameNotFoundException("User not found with id : " + id));
         return user;
     }
-    public Page<User> findAll(Pageable pageable){
-        return userRepository.findAll(pageable);
+    public List<User> findAllUser(Pageable pageable){
+        return userRepository.findAllUser(pageable);
     }
     @Transactional
     public String uploadImage(Long id ,MultipartFile file) throws IOException {

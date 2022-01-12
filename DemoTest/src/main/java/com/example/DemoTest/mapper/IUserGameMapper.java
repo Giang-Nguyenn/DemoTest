@@ -20,7 +20,10 @@ public interface IUserGameMapper {
 //    @Mapping(source = "user",target = "user_id",qualifiedByName = "userToUserId")
 //    @Mapping(source = "game",target = "game_id",qualifiedByName = "gameToGameId")
     UserGameDTO userGameToDTO(UserGame userGame);
-    List<UserGameDTO> userGameToListDTO(Page<UserGame> userGames);
+    List<UserGameDTO> userGameToListDTO(List<UserGame> userGames);
+
+
+    UserGame toUserGame(UserGameDTO userGameDTO);
 //
 //    @Named("userToUserId")
 //    default Long userToUserId(User user){

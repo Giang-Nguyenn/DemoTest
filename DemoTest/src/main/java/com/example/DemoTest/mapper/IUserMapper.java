@@ -14,6 +14,7 @@ public interface IUserMapper {
     IUserMapper INSTANCE= Mappers.getMapper(IUserMapper.class);
     UserDTO userToDTO(User user);
     UserDTOBasic userToDTOBasic(User user);
-    List<UserDTO> userToListDTO(Page<User> user);
-//    List<UserDTOBasic> userToListDTOBasic(List<User> user);
+
+    List<UserDTO> userToListDTO(List<User> user);
+    List<UserDTOBasic> userToListDTOBasic(List<User> user);
 }

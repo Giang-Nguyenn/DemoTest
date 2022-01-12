@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +29,7 @@ public class GameController {
 
     @GetMapping("/game")
     ResponseEntity<List<GameDTO>> listGame(Pageable pageable){
-        Page<Game> lgame= gameService.findAll(pageable);
+        List<Game> lgame= gameService.findAllGame(pageable);
         List<GameDTO> gameDTOS=IGameMapper.INSTANCE.gameToListDTO(lgame);
 //        for(Game game:lgame){
 //            gameDTOS.add(IGameMapper.INSTANCE.gameToDTO(game));
@@ -42,6 +43,7 @@ public class GameController {
     }
 
     @PatchMapping("/game/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     ResponseEntity<GameDTO> partialUpdate(@PathVariable Long id, @RequestBody  HashMap<Object,Object> fields){
         fields.remove("id");
         Game game = gameService.findById(id);
@@ -55,6 +57,7 @@ public class GameController {
     }
 
     @DeleteMapping("/game/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     ResponseEntity<String> deleteGame(@PathVariable Long id){
         Boolean status= gameService.deleteById(id);
         return  new ResponseEntity<>("",HttpStatus.OK);

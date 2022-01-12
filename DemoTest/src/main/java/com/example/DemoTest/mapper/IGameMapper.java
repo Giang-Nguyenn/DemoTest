@@ -12,5 +12,5 @@ import java.util.List;
 public interface IGameMapper {
     IGameMapper INSTANCE= Mappers.getMapper(IGameMapper.class);
     GameDTO gameToDTO(Game game);
-    List<GameDTO> gameToListDTO(Page<Game> game);
+    List<GameDTO> gameToListDTO(List<Game> game);
 }

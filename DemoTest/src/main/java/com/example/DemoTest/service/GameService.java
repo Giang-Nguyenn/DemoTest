@@ -20,8 +20,8 @@ public class GameService {
                 () -> new NotFoundException(String.format("NotFound game id : %s ",id))
         );
     }
-    public Page<Game> findAll(Pageable pageable){
-        return gameRepository.findAll(pageable);
+    public List<Game> findAllGame(Pageable pageable){
+        return (List<Game>) gameRepository.findAllGame(pageable);
     }
 
     public Boolean deleteById(Long id){
