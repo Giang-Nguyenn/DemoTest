@@ -1,4 +1,4 @@
-package com.example.DemoTest.core;
+package com.example.DemoTest.core.upload;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;

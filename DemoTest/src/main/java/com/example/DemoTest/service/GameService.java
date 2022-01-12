@@ -25,8 +25,12 @@ public class GameService {
     }
 
     public Boolean deleteById(Long id){
-        if (!gameRepository.findById(id).isPresent()) throw new NotFoundException("Game not found with id : " + id);
+        if (!gameRepository.findById(id).isPresent()) throw new NotFoundException(String.format("NotFound game id : %s ",id));
         gameRepository.deleteById(id);
         return true;
+    }
+
+    public Game save(Game game){
+        return gameRepository.save(game);
     }
 }

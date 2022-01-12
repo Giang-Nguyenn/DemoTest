@@ -20,7 +20,6 @@ public class Game {
     private Long id;
 
     @Column(unique = true,nullable = false)
-    @Size(max = 100)
     private String name;
 
     @CreatedDate

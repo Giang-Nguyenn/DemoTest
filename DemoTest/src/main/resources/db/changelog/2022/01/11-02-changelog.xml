@@ -4,12 +4,12 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd">
-    <changeSet id="1641716916967-11" author="nguyen (generated)">
+    <changeSet id="1641873806028-16" author="nguyen (generated)">
         <insert tableName="role">
-            <column name="name">ADMIN</column>
+            <column name="name">ROLE_ADMIN</column>
         </insert>
         <insert tableName="role">
-            <column name="name">USER</column>
+            <column name="name">ROLE_USER</column>
         </insert>
     </changeSet>
 

@@ -1,6 +1,7 @@
 package com.example.DemoTest.core.sercurity;
 
 
+import com.example.DemoTest.core.auth.AuthorizationFilter;
 import com.example.DemoTest.core.auth.jwt.AuthEntryPointJwt;
 import com.example.DemoTest.core.auth.jwt.JwtAuthenticationFilter;
 import com.example.DemoTest.service.UserService;
@@ -16,7 +17,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import sun.net.www.protocol.http.AuthenticationHeader;
 
 import javax.servlet.Filter;
 
@@ -33,6 +33,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public Filter jwtAuthenticationFilter() {
         return new JwtAuthenticationFilter();
+    }
+
+    @Bean
+    public Filter authorizationFilter() {
+        return new AuthorizationFilter();
     }
 
     @Bean(BeanIds.AUTHENTICATION_MANAGER)
@@ -68,11 +73,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .antMatchers("/api/sign").permitAll();
 ////                .antMatchers("/api/random").hasAnyAuthority("ADMIN")
 //                .antMatchers("/api/sign").permitAll()
-                .antMatchers("/user").hasAnyAuthority("USER")
+//                .antMatchers("/api/user/**").hasAnyAuthority("USER")
 //                .antMatchers("/post/**").hasAnyAuthority("USER")
                 .anyRequest().authenticated();
 
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAfter(authorizationFilter(), JwtAuthenticationFilter.class);
 
     }
 }

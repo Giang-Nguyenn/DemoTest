@@ -1,6 +1,6 @@
 package com.example.DemoTest.service;
 
-import com.example.DemoTest.core.UploadFile;
+import com.example.DemoTest.core.upload.UploadFile;
 import com.example.DemoTest.core.auth.Sign;
 import com.example.DemoTest.exception.AlreadyExistsException;
 import com.example.DemoTest.exception.NotFoundException;
@@ -20,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -51,7 +50,7 @@ public class UserService implements UserDetailsService {
         if (userRepository.existsByUserName(sign.getUserName())) throw new AlreadyExistsException(String.format("Username %s AlreadyExists",sign.getUserName()));
         user.setUserName(sign.getUserName());
         user.setPassWord(passwordEncoder.encode(sign.getPassWord()));
-        user.setRole(roleRepository.findByName("USER"));
+        user.setRole(roleRepository.findByName("ROLE_USER"));
         userRepository.save(user);
         return user;
     }

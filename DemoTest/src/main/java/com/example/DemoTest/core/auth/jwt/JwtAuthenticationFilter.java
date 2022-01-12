@@ -29,27 +29,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        System.out.println("doFilter");
+        System.out.println("JwtAuthenticationFilter");
         try {
-//        if(true ) throw new UnauthorizedException("không có quyền");
-
             String jwt = getJwtFromRequest(request);
             if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
                 Claims claims=tokenProvider.getClaimsFromToken(jwt);
                 Long userId = tokenProvider.getUserIdFromJWT(claims);
-//                if(tokenProvider.accessTime(claims.getExpiration().getTime())){
-//                    System.out.println("Còn hạn");
-//                }
-//                else {
-//                    System.out.println("Hết hạn");
-//                }
                 UserDetails userDetails = customUserDetailsService.loadUserById(userId);
                 if(userDetails != null) {
                     UsernamePasswordAuthenticationToken
                             authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
                             userDetails
                                     .getAuthorities());
-                    System.out.println(authentication);
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     System.out.println(authentication);
                     SecurityContextHolder.getContext().setAuthentication(authentication);

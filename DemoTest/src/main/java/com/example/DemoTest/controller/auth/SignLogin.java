@@ -27,10 +27,7 @@ public class SignLogin {
     @Autowired
     private JwtTokenProvider tokenProvider;
 
-//    @Autowired
-//    UserRepository userRepository;
-//    @Autowired
-//    RoleRepository roleRepository;
+
     @Autowired
     UserService userService;
     @GetMapping("/test")
@@ -54,14 +51,8 @@ public class SignLogin {
                 )
         );
         System.out.println(authentication);
-//        System.out.println(authentication.getAuthorities());
-
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        System.out.println(authentication.getPrincipal().toString());
         String jwt = tokenProvider.generateToken((CustomUserDetails) authentication.getPrincipal());
         System.out.println(jwt.toString());
         return new LoginResponse(jwt);
-//        return "ok";
     }
 }
