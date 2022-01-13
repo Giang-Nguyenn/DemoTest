@@ -8,6 +8,6 @@ import java.util.Date;
 @Data
 public class EventDTO {
     Long id;
-    UserGame userGame;
+    UserGameDTO userGame;
     Date startTime;
 }

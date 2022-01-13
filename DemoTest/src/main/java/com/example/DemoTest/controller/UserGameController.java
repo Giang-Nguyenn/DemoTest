@@ -38,11 +38,13 @@ public class UserGameController {
         List<UserGameDTO> userGameDTOS= IUserGameMapper.INSTANCE.userGameToListDTO(userGameService.findAllUserGame(pageable));
         return new ResponseEntity<>(userGameDTOS, HttpStatus.OK);
     }
+
     @GetMapping("/user/{id}")
     ResponseEntity<List<GameDTO>> getAllGame(@PathVariable Long id,Pageable pageable){
         List<GameDTO> gameDTOList= IGameMapper.INSTANCE.gameToListDTO((userGameService.getGameOfUser(id,pageable)));
         return new ResponseEntity<>(gameDTOList,HttpStatus.OK);
     }
+
     @GetMapping("/game/{id}")
     ResponseEntity<List<UserDTOBasic>> getAllUser(@PathVariable Long id,Pageable pageable){
         List<UserDTOBasic> userDTOBasicList=IUserMapper.INSTANCE.userToListDTOBasic(userGameService.getUserOfGame(id,pageable));

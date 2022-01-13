@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserGameService {
@@ -50,4 +51,9 @@ public class UserGameService {
         userGame.setGame(game);
         return userGameRepository.save(userGame);
     }
+
+    Optional<UserGame> findById(Long id){
+        return userGameRepository.findById(id);
+    }
+
 }
