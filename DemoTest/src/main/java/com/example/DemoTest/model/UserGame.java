@@ -1,5 +1,6 @@
 package com.example.DemoTest.model;
 
+import com.example.DemoTest.core.model_abtract.BaseModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -10,7 +11,7 @@ import java.util.Date;
 
 @Data
 @Entity
-public class UserGame {
+public class UserGame extends BaseModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,7 +28,4 @@ public class UserGame {
     @JoinColumn(name = "game_id",nullable = false)
     private Game game;
 
-
-    @CreatedDate
-    private Date createAt;
 }

@@ -42,6 +42,7 @@ public class UserController {
 
     @GetMapping("/user/{id}")
     public UserDTO retrieveUser(@PathVariable Long id){
+        System.out.println(userService.findUserById(id));
         return IUserMapper.INSTANCE.userToDTO(userService.findUserById(id));
     }
 

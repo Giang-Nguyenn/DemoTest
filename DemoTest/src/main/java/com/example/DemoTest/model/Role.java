@@ -1,5 +1,6 @@
 package com.example.DemoTest.model;
 
+import com.example.DemoTest.core.model_abtract.BaseModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -16,7 +17,8 @@ import java.util.Set;
 
 @Data
 @Entity
-public class Role {
+@Table(name = "Role")
+public class Role extends BaseModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -37,11 +39,6 @@ public class Role {
     @ToString.Exclude
     private Set<User> user = new LinkedHashSet<>();
 
-    @CreatedDate
-    private Date createAt;
-
-    @LastModifiedDate
-    private  LocalDateTime updateAt;
 
 
 

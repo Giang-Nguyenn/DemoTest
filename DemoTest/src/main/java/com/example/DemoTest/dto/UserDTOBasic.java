@@ -8,7 +8,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class UserDTOBasic {
     Long id;
-    private String userName;
+    private String username;
     private String fullName;
     private String phone;
     private String image;

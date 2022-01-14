@@ -46,8 +46,8 @@ public class SignLogin {
         System.out.println(loginRequest);
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        loginRequest.getUserName(),
-                        loginRequest.getPassWord()
+                        loginRequest.getUsername(),
+                        loginRequest.getPassword()
                 )
         );
         System.out.println(authentication);

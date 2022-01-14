@@ -1,5 +1,6 @@
 package com.example.DemoTest.model;
 
+import com.example.DemoTest.core.model_abtract.BaseModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -14,7 +15,7 @@ import java.util.Set;
 
 @Data
 @Entity
-public class Permissions {
+public class Permissions extends BaseModel {
     @Id
     @GeneratedValue
     private Long id;
@@ -30,17 +31,4 @@ public class Permissions {
     @ToString.Exclude
     private Set<Role> role = new LinkedHashSet<>();
 
-    @CreatedDate
-    private Date createAt;
-
-    @LastModifiedDate
-    private  LocalDateTime updateAt;
-
-    public Set<Role> getRole() {
-        return role;
-    }
-
-    public void setRole(Set<Role> role) {
-        this.role = role;
-    }
 }

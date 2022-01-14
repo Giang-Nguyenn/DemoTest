@@ -36,7 +36,7 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        User user = userRepository.findByUserName(username);
+        User user = userRepository.findByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException(username);
         }
@@ -48,9 +48,9 @@ public class UserService implements UserDetailsService {
 
     public User saveUserSign(Sign sign){
         User user=new User();
-        if (userRepository.existsByUserName(sign.getUserName())) throw new AlreadyExistsException(String.format("Username %s AlreadyExists",sign.getUserName()));
-        user.setUserName(sign.getUserName());
-        user.setPassWord(passwordEncoder.encode(sign.getPassWord()));
+        if (userRepository.existsByUsername(sign.getUsername())) throw new AlreadyExistsException(String.format("Username %s AlreadyExists",sign.getUsername()));
+        user.setUsername(sign.getUsername());
+        user.setPassword(passwordEncoder.encode(sign.getPassword()));
         user.setRole(roleRepository.findByName("ROLE_USER"));
         userRepository.save(user);
         return user;
@@ -81,7 +81,7 @@ public class UserService implements UserDetailsService {
         return true;
     }
     public User findByUserName(String username){
-        return userRepository.findByUserName(username);
+        return userRepository.findByUsername(username);
     }
     public User findUserById(Long id){
         User user=userRepository.findById(id).orElseThrow(

@@ -5,53 +5,56 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd"
         objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
-    <changeSet id="1641873806028-1" author="nguyen (generated)">
+    <changeSet id="1642147374626-1" author="nguyen (generated)">
         <createTable tableName="event">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_event"/>
             </column>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
             <column name="user_game_id" type="BIGINT"/>
-            <column name="start_time" type="DATETIME"/>
+            <column name="status" type="VARCHAR(255)"/>
+            <column name="start_at" type="DATETIME"/>
         </createTable>
     </changeSet>
-    <changeSet id="1641873806028-2" author="nguyen (generated)">
+    <changeSet id="1642147374626-2" author="nguyen (generated)">
         <createTable tableName="game">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_game"/>
             </column>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
             <column name="name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="create_at" type="DATETIME"/>
-            <column name="update_at" type="DATETIME"/>
         </createTable>
     </changeSet>
-    <changeSet id="1641873806028-3" author="nguyen (generated)">
+    <changeSet id="1642147374626-3" author="nguyen (generated)">
         <createTable tableName="permissions">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_permissions"/>
             </column>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
             <column name="method" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="action" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="create_at" type="DATETIME"/>
-            <column name="update_at" type="DATETIME"/>
         </createTable>
     </changeSet>
-    <changeSet id="1641873806028-4" author="nguyen (generated)">
+    <changeSet id="1642147374626-4" author="nguyen (generated)">
         <createTable tableName="role">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_role"/>
             </column>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
             <column name="name" type="VARCHAR(255)"/>
-            <column name="create_at" type="DATETIME"/>
-            <column name="update_at" type="DATETIME"/>
         </createTable>
     </changeSet>
-    <changeSet id="1641873806028-5" author="nguyen (generated)">
+    <changeSet id="1642147374626-5" author="nguyen (generated)">
         <createTable tableName="role_permissions">
             <column name="permissions_id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_role_permissions"/>
@@ -61,15 +64,17 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1641873806028-6" author="nguyen (generated)">
+    <changeSet id="1642147374626-6" author="nguyen (generated)">
         <createTable tableName="user">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_user"/>
             </column>
-            <column name="user_name" type="VARCHAR(255)">
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
+            <column name="username" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="pass_word" type="VARCHAR(255)">
+            <column name="password" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="email" type="VARCHAR(255)"/>
@@ -79,56 +84,55 @@
             <column name="role" type="BIGINT"/>
             <column name="image" type="VARCHAR(255)"/>
             <column name="note" type="VARCHAR(255)"/>
-            <column defaultValueComputed="1" name="is_activity" type="bit"/>
-            <column name="create_at" type="DATETIME"/>
-            <column name="update_at" type="DATETIME"/>
+            <column defaultValueBoolean="true" name="is_activity" type="bit"/>
         </createTable>
     </changeSet>
-    <changeSet id="1641873806028-7" author="nguyen (generated)">
+    <changeSet id="1642147374626-7" author="nguyen (generated)">
         <createTable tableName="user_game">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_usergame"/>
             </column>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
             <column name="user_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
             <column name="game_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="create_at" type="DATETIME"/>
         </createTable>
     </changeSet>
-    <changeSet id="1641873806028-8" author="nguyen (generated)">
+    <changeSet id="1642147374626-8" author="nguyen (generated)">
         <addUniqueConstraint columnNames="name" constraintName="uc_game_name" tableName="game"/>
     </changeSet>
-    <changeSet id="1641873806028-9" author="nguyen (generated)">
-        <addUniqueConstraint columnNames="user_name" constraintName="uc_user_username" tableName="user"/>
+    <changeSet id="1642147374626-9" author="nguyen (generated)">
+        <addUniqueConstraint columnNames="username" constraintName="uc_user_username" tableName="user"/>
     </changeSet>
-    <changeSet id="1641873806028-10" author="nguyen (generated)">
+    <changeSet id="1642147374626-10" author="nguyen (generated)">
         <addForeignKeyConstraint baseColumnNames="user_game_id" baseTableName="event"
                                  constraintName="FK_EVENT_ON_USER_GAME" referencedColumnNames="id"
                                  referencedTableName="user_game"/>
     </changeSet>
-    <changeSet id="1641873806028-11" author="nguyen (generated)">
+    <changeSet id="1642147374626-11" author="nguyen (generated)">
         <addForeignKeyConstraint baseColumnNames="game_id" baseTableName="user_game"
                                  constraintName="FK_USERGAME_ON_GAME" referencedColumnNames="id"
                                  referencedTableName="game"/>
     </changeSet>
-    <changeSet id="1641873806028-12" author="nguyen (generated)">
+    <changeSet id="1642147374626-12" author="nguyen (generated)">
         <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_game"
                                  constraintName="FK_USERGAME_ON_USER" referencedColumnNames="id"
                                  referencedTableName="user"/>
     </changeSet>
-    <changeSet id="1641873806028-13" author="nguyen (generated)">
+    <changeSet id="1642147374626-13" author="nguyen (generated)">
         <addForeignKeyConstraint baseColumnNames="role" baseTableName="user" constraintName="FK_USER_ON_ROLE"
                                  referencedColumnNames="id" referencedTableName="role"/>
     </changeSet>
-    <changeSet id="1641873806028-14" author="nguyen (generated)">
+    <changeSet id="1642147374626-14" author="nguyen (generated)">
         <addForeignKeyConstraint baseColumnNames="permissions_id" baseTableName="role_permissions"
                                  constraintName="fk_rolper_on_permissions" referencedColumnNames="id"
                                  referencedTableName="permissions"/>
     </changeSet>
-    <changeSet id="1641873806028-15" author="nguyen (generated)">
+    <changeSet id="1642147374626-15" author="nguyen (generated)">
         <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="role_permissions"
                                  constraintName="fk_rolper_on_role" referencedColumnNames="id"
                                  referencedTableName="role"/>
