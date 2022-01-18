@@ -1,5 +1,6 @@
 package com.example.DemoTest.controller;
 
+import com.example.DemoTest.core.kafka_redis.kafka.EventMessageKafka;
 import com.example.DemoTest.dto.EventDTO;
 import com.example.DemoTest.dto.EventSeachForGameDTO;
 import com.example.DemoTest.dto.EventSeachForUserDTO;
@@ -16,19 +17,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api")
 public class EventController {
-    private KafkaTemplate<String, String> template;
+    private KafkaTemplate<String, Object> template;
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -36,7 +33,7 @@ public class EventController {
     @Autowired
     EventRepository eventRepository;
 
-    public EventController(KafkaTemplate<String, String> template) {
+    public EventController(KafkaTemplate<String, Object> template) {
         this.template = template;
 //        this.myTopicConsumer = myTopicConsumer;
     }
@@ -67,9 +64,9 @@ public class EventController {
         //check resquest
         CustomUserDetails customUserDetails= (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Event event = eventService.addEvent(customUserDetails.getId(),eventDTO);
+        EventMessageKafka kafkaMessageObject=new EventMessageKafka(customUserDetails.getId(),event.getStatus(),event.getCreatedAt());
 //        long second = ChronoUnit.SECONDS.between(eventDTO.getStartAt(), eventDTO.getStartAt1());
-//        System.out.println(second);
-        template.send("test",customUserDetails.getId().toString()+","+event.getStatus()+","+event.getCreatedAt());
+        template.send("test",kafkaMessageObject);
         return new ResponseEntity(HttpStatus.CREATED);
     }
 
