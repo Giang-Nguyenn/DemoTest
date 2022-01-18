@@ -28,6 +28,8 @@ public class User extends BaseModel {
     @Column(nullable = false)
     private String password;
 
+    private  Long point = 0L;
+
     @Email
     private String email;
     private String fullName;

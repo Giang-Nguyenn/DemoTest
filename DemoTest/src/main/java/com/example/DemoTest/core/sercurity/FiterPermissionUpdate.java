@@ -1,4 +1,4 @@
-package com.example.DemoTest.core;
+package com.example.DemoTest.core.sercurity;
 
 import com.example.DemoTest.model.CustomUserDetails;
 import org.springframework.security.core.Authentication;

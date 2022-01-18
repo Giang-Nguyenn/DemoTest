@@ -104,4 +104,12 @@ public class UserService implements UserDetailsService {
     }
 
 
+    public  Boolean updatePoint(Long user_id,Long addPointValue){
+        User user=findUserById(user_id);
+        user.setPoint(user.getPoint()+addPointValue);
+        userRepository.save(user);
+        return true;
+    }
+
+
 }

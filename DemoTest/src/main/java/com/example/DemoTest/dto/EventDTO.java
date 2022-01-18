@@ -15,4 +15,9 @@ public class EventDTO {
     LocalDateTime startAt;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
+
+
+    public String toStringKafka(){
+        return this.userGame.getId() +","+ this.status+","+this.startAt;
+    }
 }
