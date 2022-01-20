@@ -29,7 +29,6 @@ public class RedisConfig {
 
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
-
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(redisHost, redisPort);
         return new JedisConnectionFactory();
     }

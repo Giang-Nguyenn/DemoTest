@@ -13,14 +13,12 @@ import java.time.temporal.ChronoUnit;
 public class EventPointLogic {
     @Autowired
     private RedisTemplate redisTemplateWithJsonSerializer;
-
     @Autowired
     UserService userService;
 
     Integer maxPointInDay=2400;
     Integer pointSaveDb=20;
     Integer maxSecond=60;
-
 
     public void updateValueRedisAndDB(EventMessageKafka eventMessageKafka){
         String key = eventMessageKafka.getId()+"_"+eventMessageKafka.getCreatedAt().toString().substring(0,10);
@@ -31,7 +29,7 @@ public class EventPointLogic {
                 long second = ChronoUnit.SECONDS.between(eventValueRedis.getLastEventTime(),
                         eventMessageKafka.getCreatedAt());
                 if(second <= maxSecond){
-                    Integer pointPer60second= Math.toIntExact(second / 3);
+                    Integer pointPer60second= Math.toIntExact(second / 3); //(20 point for 60s)
                     Integer newPoint=eventValueRedis.getPoint()+pointPer60second;
                     if(newPoint >pointSaveDb) {
                         if((pointInDay+newPoint) > maxPointInDay){
@@ -58,11 +56,11 @@ public class EventPointLogic {
     }
 
     public void updateValueRedis(EventMessageKafka eventMessageKafka,String key,Integer point,Integer maxPointInDay){
-        EventValueRedis newValue = new EventValueRedis(eventMessageKafka.getId(),
-                eventMessageKafka.getStatus(),
-                eventMessageKafka.getCreatedAt(),
-                point,
-                maxPointInDay);
+        EventValueRedis newValue = new EventValueRedis( eventMessageKafka.getId(),
+                                                        eventMessageKafka.getStatus(),
+                                                        eventMessageKafka.getCreatedAt(),
+                                                        point,
+                                                        maxPointInDay);
         redisTemplateWithJsonSerializer.opsForValue().set(key,newValue);
     }
 }

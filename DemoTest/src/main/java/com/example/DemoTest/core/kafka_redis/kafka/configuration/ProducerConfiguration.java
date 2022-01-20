@@ -5,6 +5,7 @@ package com.example.DemoTest.core.kafka_redis.kafka.configuration;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
@@ -17,8 +18,9 @@ import java.util.Map;
 
 @Configuration
 public class ProducerConfiguration {
-
-    private static final String KAFKA_BROKER = "localhost:9092";
+    @Value("${kafka.broker}")
+    private String KAFKA_BROKER;
+//    private static final String KAFKA_BROKER = "localhost:9092";
 
     @Bean
     public ProducerFactory<String, Object> producerFactory() {

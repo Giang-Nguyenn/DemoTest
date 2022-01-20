@@ -18,9 +18,11 @@ import java.time.LocalDateTime;
 public class EventValueRedis {
     Long id;
     StatusEvent status;
+
     @JsonSerialize(using = ToStringSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     LocalDateTime lastEventTime;
+
     Integer point;
     Integer pointInDay;
 

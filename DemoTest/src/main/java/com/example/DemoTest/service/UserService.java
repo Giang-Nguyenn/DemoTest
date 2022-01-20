@@ -1,7 +1,7 @@
 package com.example.DemoTest.service;
 
 import com.example.DemoTest.core.upload.UploadFile;
-import com.example.DemoTest.core.auth.Sign;
+import com.example.DemoTest.core.auth.SignRequest;
 import com.example.DemoTest.exception.AlreadyExistsException;
 import com.example.DemoTest.exception.NotFoundException;
 import com.example.DemoTest.model.CustomUserDetails;
@@ -9,7 +9,6 @@ import com.example.DemoTest.model.User;
 import com.example.DemoTest.repository.IRoleRepository;
 import com.example.DemoTest.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -46,7 +45,7 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
-    public User saveUserSign(Sign sign){
+    public User saveUserSign(SignRequest sign){
         User user=new User();
         if (userRepository.existsByUsername(sign.getUsername())) throw new AlreadyExistsException(String.format("Username %s AlreadyExists",sign.getUsername()));
         user.setUsername(sign.getUsername());

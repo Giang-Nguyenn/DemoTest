@@ -9,7 +9,9 @@ import java.io.IOException;
 
 
 public class UploadFile {
-    private String urlImage ="/home/nguyen/Desktop";
+    @Value("${url.avata_url}")
+    private String urlImage;
+//    private String urlImage ="/home/nguyen/Desktop";
 
     public String upload(Long id,MultipartFile file) throws IOException {
         String url= String.format("%s/DemoTest/Image/%s",urlImage,id);

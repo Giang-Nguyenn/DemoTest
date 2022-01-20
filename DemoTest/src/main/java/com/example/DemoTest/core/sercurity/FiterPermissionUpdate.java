@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class FiterPermissionUpdate {
+public class FiterPermissionUpdate {//ipm late
     public Boolean hasPermissionUpdate(Long idUpdate, Authentication authentication){
         CustomUserDetails customUserDetails= (CustomUserDetails) authentication.getPrincipal();
         return (idUpdate.equals(customUserDetails.getId()));

@@ -4,6 +4,10 @@ import com.example.DemoTest.core.kafka_redis.kafka.EventMessageKafka;
 import com.example.DemoTest.dto.EventDTO;
 import com.example.DemoTest.dto.EventSeachForGameDTO;
 import com.example.DemoTest.dto.EventSeachForUserDTO;
+import com.example.DemoTest.dto.statistic.EventForManyGameDTO;
+import com.example.DemoTest.dto.statistic.EventForManyUserDTO;
+import com.example.DemoTest.dto.statistic.IGameEventByDate;
+import com.example.DemoTest.dto.statistic.IUserEventByDate;
 import com.example.DemoTest.mapper.IEventMapper;
 import com.example.DemoTest.model.CustomUserDetails;
 import com.example.DemoTest.model.Event;
@@ -29,51 +33,87 @@ public class EventController {
 
     @Autowired
     private RedisTemplate redisTemplate;
-
     @Autowired
     EventRepository eventRepository;
-
-    public EventController(KafkaTemplate<String, Object> template) {
-        this.template = template;
-//        this.myTopicConsumer = myTopicConsumer;
-    }
-    
     @Autowired
     EventService eventService;
 
-    @GetMapping("/event/user/{user_id}")
-    ResponseEntity<List<EventSeachForUserDTO>> getEventForUser(@PathVariable Long user_id,
-                                                               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-                                                               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
-                                                               Pageable pageable){
-        return new ResponseEntity<>(IEventMapper.INSTANCE.eventToEventSeachForUserListDTO(
-                eventRepository.getEventForUser(user_id,start,end,pageable)),HttpStatus.OK );
+    public EventController(KafkaTemplate<String, Object> template) {
+        this.template = template;
     }
-    @GetMapping("/event/game/{game_id}")
-    ResponseEntity<List<EventSeachForGameDTO>> getEventForGame(@PathVariable Long game_id,
-                                                               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-                                                               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
-                                                               Pageable pageable){
+
+
+    @GetMapping("/event/user/{id}")
+    ResponseEntity<List<EventSeachForUserDTO>> getListEventForUser( @PathVariable(name="id") Long userId,
+                                                                    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+                                                                    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
+                                                                    Pageable pageable){
+        return new ResponseEntity<>(IEventMapper.INSTANCE.eventToEventSeachForUserListDTO(
+                eventService.getListEventForUser(userId,start,end,pageable)),HttpStatus.OK );
+    }
+
+    @GetMapping("/event/game/{id}")
+    ResponseEntity<List<EventSeachForGameDTO>> getListEventForGame( @PathVariable(name="id") Long gameId,
+                                                                    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+                                                                    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
+                                                                    Pageable pageable){
 
         return new ResponseEntity<>(IEventMapper.INSTANCE.eventToEventSeachForGameListDTO(
-                eventRepository.getEventForGame(game_id,start,end,pageable)),HttpStatus.OK );
+                eventService.getListEventForGame(gameId,start,end,pageable)),HttpStatus.OK );
     }
 
     @PostMapping("/event")
     ResponseEntity addEvent(@RequestBody EventDTO eventDTO){
-        //check resquest
+        //check resquest: ipm late
         CustomUserDetails customUserDetails= (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Event event = eventService.addEvent(customUserDetails.getId(),eventDTO);
         EventMessageKafka kafkaMessageObject=new EventMessageKafka(customUserDetails.getId(),event.getStatus(),event.getCreatedAt());
-//        long second = ChronoUnit.SECONDS.between(eventDTO.getStartAt(), eventDTO.getStartAt1());
         template.send("test",kafkaMessageObject);
         return new ResponseEntity(HttpStatus.CREATED);
     }
 
+    //Số lượng user và game trong 1 khoảng thời gian
     @GetMapping("/event/count")
-    ResponseEntity<String> getCountUserAndGameAboutTime(@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-                                                        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
-                                                        Pageable pageable){
-        return new ResponseEntity<>("suceess",HttpStatus.OK);
+    ResponseEntity<List<?>> getCountUserAndGameAboutTime(@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+                                                         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
+                                                         Pageable pageable){
+        return new ResponseEntity<>(eventService.getCountUserAndGameAboutTime(start,end),HttpStatus.OK);
+    }
+
+
+
+
+    //Số lượng event của các game trong 1 khaongr thời gian
+    @GetMapping("/event/game_about_time")
+    ResponseEntity<List<EventForManyGameDTO>> countEventForManyGame(@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+                                                                    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
+                                                                    Pageable pageable){
+        return new ResponseEntity<>(eventService.countEventForManyGameAboutTime(start,end),HttpStatus.OK);
+    }
+
+    //Số lượng event của các user trong 1 khaongr thời gian
+    @GetMapping("/event/user_about_time")
+    ResponseEntity<List<EventForManyUserDTO>> countEventForManyUser(@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+                                                                    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
+                                                                    Pageable pageable){
+        return new ResponseEntity<>(eventService.countEventForManyUserAboutTime(start,end),HttpStatus.OK);
+    }
+
+
+    // thống kê số lượng event của game theo ngày
+    @GetMapping("/event/statistic/game/{id}")
+    ResponseEntity<List<IGameEventByDate>> countEventGameByDate(@PathVariable(name="id") Long gameId,
+                                                                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+                                                                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
+                                                                Pageable pageable){
+        return new ResponseEntity<>(eventService.countEventGameByDate(gameId,start,end),HttpStatus.OK);
+    }
+    // thống kê số lượng event của user theo ngày
+    @GetMapping("/event/statistic/user/{id}")
+    ResponseEntity<List<IUserEventByDate>> countEventUserByDate(@PathVariable(name="id") Long userId,
+                                                                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+                                                                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
+                                                                Pageable pageable){
+        return new ResponseEntity<>(eventService.countEventUserByDate(userId,start,end),HttpStatus.OK);
     }
 }
