@@ -19,6 +19,7 @@ public class EventPointLogic {
     Integer maxPointInDay=2400;
     Integer pointSaveDb=20;
     Integer maxSecond=60;
+    Integer secondDivToPoint=3;
 
     public void updateValueRedisAndDB(EventMessageKafka eventMessageKafka){
         String key = eventMessageKafka.getId()+"_"+eventMessageKafka.getCreatedAt().toString().substring(0,10);
@@ -29,7 +30,7 @@ public class EventPointLogic {
                 long second = ChronoUnit.SECONDS.between(eventValueRedis.getLastEventTime(),
                         eventMessageKafka.getCreatedAt());
                 if(second <= maxSecond){
-                    Integer pointPer60second= Math.toIntExact(second / 3); //(20 point for 60s)
+                    Integer pointPer60second= Math.toIntExact(second / secondDivToPoint); //(20 point for 60s)
                     Integer newPoint=eventValueRedis.getPoint()+pointPer60second;
                     if(newPoint >pointSaveDb) {
                         if((pointInDay+newPoint) > maxPointInDay){

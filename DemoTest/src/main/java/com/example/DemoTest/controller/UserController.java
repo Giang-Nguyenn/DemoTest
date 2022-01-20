@@ -32,27 +32,27 @@ public class UserController {
 
     @GetMapping("user")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public List<UserDTO> listUser(Pageable pageable){
+    public ResponseEntity<List<UserDTO>> listUser(Pageable pageable){
         System.out.println(pageable.toString());
         List<User> listUsers = userService.findAllUser(pageable);
         List<UserDTO> userDTOS=IUserMapper.INSTANCE.userToListDTO(listUsers);
-        return userDTOS;
+        return new ResponseEntity<>(userDTOS,HttpStatus.OK);
     }
 
     @GetMapping("/user/{id}")
-    public UserDTO retrieveUser(@PathVariable Long id){
+    public ResponseEntity<UserDTO> retrieveUser(@PathVariable Long id){
         System.out.println(userService.findUserById(id));
-        return IUserMapper.INSTANCE.userToDTO(userService.findUserById(id));
+        return new ResponseEntity<>(IUserMapper.INSTANCE.userToDTO(userService.findUserById(id)),HttpStatus.OK);
     }
 
     @PatchMapping("/user/{id}")
-    public UserDTO partialUpdate(@PathVariable Long id, @RequestBody Map<Object,Object> fields){
+    public ResponseEntity<UserDTO> partialUpdate(@PathVariable Long id, @RequestBody Map<Object,Object> fields){
         if(!permissionUpdate.hasPermissionUpdate(id, SecurityContextHolder.getContext().getAuthentication()))
             throw new UnauthorizedException("Unauthorized update with user id : "+id);
         User user = userService.findUserById(id);
         fields.remove("id");
-        fields.remove("userName");
-        fields.remove("passWord");
+        fields.remove("username");
+        fields.remove("password");
         fields.forEach((k,v)->{
             Field field= ReflectionUtils.findField(User.class,(String) k);
             field.setAccessible(true);
@@ -60,14 +60,14 @@ public class UserController {
             ReflectionUtils.setField(field,user,v);
         });
         UserDTO userDTO=IUserMapper.INSTANCE.userToDTO(userService.save(user));
-        return userDTO;
+        return new ResponseEntity<>(userDTO,HttpStatus.PARTIAL_CONTENT);
 
     }
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/user/{id}")
     ResponseEntity<String> delete(@PathVariable Long id){
         Boolean status = userService.delete(id);
-        return new ResponseEntity<>("success", HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/user/{id}")
