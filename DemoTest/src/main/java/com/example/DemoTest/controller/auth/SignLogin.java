@@ -5,11 +5,13 @@ import com.example.DemoTest.core.auth.LoginResponse;
 import com.example.DemoTest.core.auth.SignRequest;
 import com.example.DemoTest.core.auth.jwt.JwtTokenProvider;
 import com.example.DemoTest.dto.UserDTO;
+import com.example.DemoTest.exception.BadRequestEception;
 import com.example.DemoTest.exception.NotFoundException;
 import com.example.DemoTest.mapper.IUserMapper;
 import com.example.DemoTest.model.CustomUserDetails;
 import com.example.DemoTest.model.User;
 import com.example.DemoTest.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,14 +22,18 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
 public class SignLogin {
-    @Autowired
-    AuthenticationManager authenticationManager;
+//    @Autowired
+//    AuthenticationManager authenticationManager;
+//
+//    @Autowired
+//    private JwtTokenProvider tokenProvider;
+    private final AuthenticationManager authenticationManager;
 
-    @Autowired
-    private JwtTokenProvider tokenProvider;
+    private final JwtTokenProvider tokenProvider;
 
 
     @Autowired
@@ -40,7 +46,7 @@ public class SignLogin {
     @PostMapping("/sign")
     public ResponseEntity<UserDTO> sign(@Validated @RequestBody SignRequest sign, BindingResult bindingResult){
 //        valid sign late
-//        if(bindingResult.hasErrors()) throw new ;
+        if(bindingResult.hasErrors()) throw new BadRequestEception("username,password chỉ chữ kí tự số và chữ thường ,tối thiểu 6 kí tự");
         User user = userService.saveUserSign(sign);
         return new ResponseEntity<>(IUserMapper.INSTANCE.userToDTO(user), HttpStatus.CREATED);
     }

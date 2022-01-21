@@ -8,6 +8,7 @@ import com.example.DemoTest.model.CustomUserDetails;
 import com.example.DemoTest.model.User;
 import com.example.DemoTest.repository.IRoleRepository;
 import com.example.DemoTest.repository.IUserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,16 +23,18 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+
+@RequiredArgsConstructor
 @Service
 public class UserService implements UserDetailsService {
-    @Autowired
-    private IUserRepository userRepository;
+//    @Autowired
+    private final IUserRepository userRepository;
 
-    @Autowired
-    private IRoleRepository roleRepository;
+//    @Autowired
+    private final IRoleRepository roleRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+//    @Autowired
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) {

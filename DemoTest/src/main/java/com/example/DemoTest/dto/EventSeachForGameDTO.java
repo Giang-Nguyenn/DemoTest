@@ -8,5 +8,5 @@ public class EventSeachForGameDTO {
     Long id;
     Long user_id;
     String status;
-    LocalDateTime startAt;
+//    LocalDateTime startAt;
 }

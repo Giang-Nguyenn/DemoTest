@@ -18,11 +18,11 @@ import java.util.Date;
 @Data
 public class User extends BaseModel {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, unique = true,updatable = false)
-    @Pattern(regexp = "^[a-z0-9]{3,15}$")
+//    @Pattern(regexp = "^[a-z0-9]{3,15}$")
     private String username;
 
     @Column(nullable = false)
@@ -39,7 +39,7 @@ public class User extends BaseModel {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.PERSIST) //xoa
     @JoinColumn(name = "role")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude

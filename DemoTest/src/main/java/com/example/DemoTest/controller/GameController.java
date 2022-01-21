@@ -7,6 +7,7 @@ import com.example.DemoTest.mapper.IUserMapper;
 import com.example.DemoTest.model.Game;
 import com.example.DemoTest.model.User;
 import com.example.DemoTest.service.GameService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,11 +22,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
 public class GameController {
-    @Autowired
-    GameService gameService;
+//    @Autowired
+    private final GameService gameService;
 
     @GetMapping("/game")
     ResponseEntity<List<GameDTO>> listGame(Pageable pageable){
@@ -61,5 +63,11 @@ public class GameController {
     ResponseEntity<String> deleteGame(@PathVariable Long id){
         Boolean status= gameService.deleteById(id);
         return  new ResponseEntity<>("",HttpStatus.OK);
+    }
+
+    @PostMapping("game")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    ResponseEntity<GameDTO> addGame(@RequestBody GameDTO gameDTO){
+        return  new ResponseEntity<>(IGameMapper.INSTANCE.gameToDTO(gameService.add(gameDTO)), HttpStatus.CREATED);
     }
 }

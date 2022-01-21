@@ -9,13 +9,15 @@ import java.io.IOException;
 
 
 public class UploadFile {
-    @Value("${url.avata_url}")
-    private String urlImage;
-//    private String urlImage ="/home/nguyen/Desktop";
+//    @Value("${url.avata}")
+//    private String urlImage1;
+    private String urlImage ="/home/nguyen/Desktop";
 
     public String upload(Long id,MultipartFile file) throws IOException {
+        System.out.println(file);
         String url= String.format("%s/DemoTest/Image/%s",urlImage,id);
         file.transferTo(new File(url));
         return url ;
     }
+    
 }

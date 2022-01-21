@@ -17,7 +17,7 @@ import java.util.Set;
 @Entity
 public class Permissions extends BaseModel {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)

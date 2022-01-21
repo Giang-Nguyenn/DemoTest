@@ -30,7 +30,7 @@ public class RedisConfig {
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(redisHost, redisPort);
-        return new JedisConnectionFactory();
+        return new JedisConnectionFactory(config);//them confic
     }
 
 //    @Bean

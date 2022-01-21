@@ -12,12 +12,12 @@ public class EventDTO {
     Long id;
     UserGameDTO userGame;
     StatusEvent status;
-    LocalDateTime startAt;
+//    LocalDateTime startAt;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
 
 
-    public String toStringKafka(){
-        return this.userGame.getId() +","+ this.status+","+this.startAt;
-    }
+//    public String toStringKafka(){
+//        return this.userGame.getId() +","+ this.status+","+this.startAt;
+//    }
 }

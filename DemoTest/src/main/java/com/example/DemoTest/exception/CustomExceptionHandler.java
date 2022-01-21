@@ -30,4 +30,10 @@ public class CustomExceptionHandler {
     public  ErrorRespose handlerAlreadyExistsException(AlreadyExistsException exception, WebRequest webRequest){
         return new ErrorRespose(HttpStatus.CONFLICT,exception.getMessage());
     }
+
+    @ExceptionHandler(BadRequestEception.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public  ErrorRespose handlerBadRequestEception(BadRequestEception exception, WebRequest webRequest){
+        return new ErrorRespose(HttpStatus.BAD_REQUEST,exception.getMessage());
+    }
 }

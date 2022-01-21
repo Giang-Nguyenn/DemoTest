@@ -21,6 +21,6 @@ public class Event extends BaseModel {
     @Enumerated(EnumType.STRING)
     private StatusEvent status;
 
-    private LocalDateTime startAt;
+//    private LocalDateTime startAt;
 
 }

@@ -1,9 +1,6 @@
 package com.example.DemoTest.controller;
 
-import com.example.DemoTest.dto.GameDTO;
-import com.example.DemoTest.dto.UserDTO;
-import com.example.DemoTest.dto.UserDTOBasic;
-import com.example.DemoTest.dto.UserGameDTO;
+import com.example.DemoTest.dto.*;
 import com.example.DemoTest.mapper.IGameMapper;
 import com.example.DemoTest.mapper.IUserGameMapper;
 import com.example.DemoTest.mapper.IUserMapper;
@@ -13,6 +10,7 @@ import com.example.DemoTest.model.UserGame;
 import com.example.DemoTest.repository.IUserRepository;
 import com.example.DemoTest.repository.UserGameRepository;
 import com.example.DemoTest.service.UserGameService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,14 +21,16 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/user_game")
 public class UserGameController {
-    @Autowired
-    UserGameService userGameService;
+//    @Autowired
+    private final UserGameService userGameService;
 
-    @Autowired
-    UserGameRepository userGameRepository;
+//    @Autowired
+    private final UserGameRepository userGameRepository;
 
 
     @GetMapping("")
@@ -51,10 +51,15 @@ public class UserGameController {
         return new ResponseEntity<>(userDTOBasicList,HttpStatus.OK);
     }
 
+//    @PostMapping("")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    ResponseEntity<UserGameDTO> newUserGame(@RequestBody UserGameDTO userGameDTO){
+//        userGameDTO.setId(null);
+//        return new ResponseEntity<>(IUserGameMapper.INSTANCE.userGameToDTO(userGameService.addUserGame(userGameDTO)), HttpStatus.CREATED);
+//    }
     @PostMapping("")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    ResponseEntity<UserGameDTO> newUserGame(@RequestBody UserGameDTO userGameDTO){
-        userGameDTO.setId(null);
-        return new ResponseEntity<>(IUserGameMapper.INSTANCE.userGameToDTO(userGameService.addUserGame(userGameDTO)), HttpStatus.CREATED);
+    ResponseEntity<UserGameDTO> newUserGame(@RequestBody UserGameCreateDTO userGameCreateDTO){
+        return new ResponseEntity<>(IUserGameMapper.INSTANCE.userGameToDTO(userGameService.addUserGame(userGameCreateDTO)), HttpStatus.CREATED);
     }
 }

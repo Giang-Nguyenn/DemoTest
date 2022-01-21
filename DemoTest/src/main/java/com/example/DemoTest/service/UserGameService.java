@@ -1,6 +1,7 @@
 package com.example.DemoTest.service;
 
 import com.example.DemoTest.dto.UserDTOBasic;
+import com.example.DemoTest.dto.UserGameCreateDTO;
 import com.example.DemoTest.dto.UserGameDTO;
 import com.example.DemoTest.exception.AlreadyExistsException;
 import com.example.DemoTest.mapper.IUserGameMapper;
@@ -8,6 +9,7 @@ import com.example.DemoTest.model.Game;
 import com.example.DemoTest.model.User;
 import com.example.DemoTest.model.UserGame;
 import com.example.DemoTest.repository.UserGameRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,14 +18,15 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class UserGameService {
-    @Autowired
-    UserGameRepository userGameRepository;
-    @Autowired
-    UserService userService;
-    @Autowired
-    GameService gameService;
+//    @Autowired
+    private final UserGameRepository userGameRepository;
+//    @Autowired
+    private final UserService userService;
+//    @Autowired
+    private final GameService gameService;
 
     public UserGame save(UserGame userGame){
         return userGameRepository.save(userGame);
@@ -41,12 +44,12 @@ public class UserGameService {
         return userGameRepository.getGameOfUser(id,pageable);
     }
 
-    public UserGame addUserGame(UserGameDTO userGameDTO){
-        UserGame userGame= IUserGameMapper.INSTANCE.toUserGame(userGameDTO);
-        User user = userService.findUserById(userGameDTO.getUser().getId());
-        Game game = gameService.findById(userGameDTO.getGame().getId());
+    public UserGame addUserGame(UserGameCreateDTO userGameCreateDTO){
+        UserGame userGame= new UserGame();
+        User user = userService.findUserById(userGameCreateDTO.getUserId());
+        Game game = gameService.findById(userGameCreateDTO.getGameId());
         if(userGameRepository.existsByUserAndGame(user,game)) throw new AlreadyExistsException(String.format("AlreadyExists UserGame with user_id : %s,game_id: %s",
-                userGameDTO.getUser().getId(), userGameDTO.getUser().getId()));
+                userGameCreateDTO.getUserId(), userGameCreateDTO.getGameId()));
         userGame.setUser(user);
         userGame.setGame(game);
         return userGameRepository.save(userGame);

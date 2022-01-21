@@ -6,6 +6,7 @@ import com.example.DemoTest.exception.UnauthorizedException;
 import com.example.DemoTest.mapper.IUserMapper;
 import com.example.DemoTest.model.User;
 import com.example.DemoTest.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,14 +22,14 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
-
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
 public class UserController {
-    @Autowired
-    UserService userService;
-    @Autowired
-    FiterPermissionUpdate permissionUpdate;
+//    @Autowired
+    private final UserService userService;
+//    @Autowired
+    private final FiterPermissionUpdate permissionUpdate;
 
     @GetMapping("user")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -70,18 +71,18 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping("/user/{id}")
+    @PostMapping("/user/upload_image/{id}")
     ResponseEntity<String> uploadImage(@PathVariable Long id, MultipartFile file) throws IOException {
         if(!permissionUpdate.hasPermissionUpdate(id, SecurityContextHolder.getContext().getAuthentication()))
             throw new UnauthorizedException("Unauthorized update with user id : "+id);
         String url = userService.uploadImage(id,file);
         return  new ResponseEntity<>("url :" + url ,HttpStatus.OK);
     }
-    @PostMapping("/user/change_password/{id}")
-    ResponseEntity<String> changePassword(@PathVariable Long id) {
-//        if(!permissionUpdate.hasPermissionUpdate(id, SecurityContextHolder.getContext().getAuthentication()))
-//            throw new UnauthorizedException("Unauthorized update with user id : "+id);
-//        ipm late
-        return  new ResponseEntity<>("success"  ,HttpStatus.OK);
-    }
+//    @PostMapping("/user/change_password/{id}")
+//    ResponseEntity<String> changePassword(@PathVariable Long id) {
+////        if(!permissionUpdate.hasPermissionUpdate(id, SecurityContextHolder.getContext().getAuthentication()))
+////            throw new UnauthorizedException("Unauthorized update with user id : "+id);
+////        ipm late
+//        return  new ResponseEntity<>("success"  ,HttpStatus.OK);
+//    }
 }

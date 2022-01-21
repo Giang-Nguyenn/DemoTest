@@ -14,7 +14,7 @@ import java.util.Date;
 @Entity
 public class Game extends BaseModel {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true,nullable = false)

@@ -3,18 +3,20 @@ package com.example.DemoTest.core.kafka_redis.redis;//            redisTemplate.
 
 import com.example.DemoTest.core.kafka_redis.kafka.EventMessageKafka;
 import com.example.DemoTest.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.time.temporal.ChronoUnit;
 
+@RequiredArgsConstructor
 @Component
 public class EventPointLogic {
-    @Autowired
-    private RedisTemplate redisTemplateWithJsonSerializer;
-    @Autowired
-    UserService userService;
+//    @Autowired
+    private final RedisTemplate redisTemplateWithJsonSerializer;
+//    @Autowired
+    private final UserService userService;
 
     Integer maxPointInDay=2400;
     Integer pointSaveDb=20;
@@ -32,7 +34,7 @@ public class EventPointLogic {
                 if(second <= maxSecond){
                     Integer pointPer60second= Math.toIntExact(second / secondDivToPoint); //(20 point for 60s)
                     Integer newPoint=eventValueRedis.getPoint()+pointPer60second;
-                    if(newPoint >pointSaveDb) {
+                    if(newPoint > pointSaveDb) {
                         if((pointInDay+newPoint) > maxPointInDay){
                             userService.updatePoint(eventMessageKafka.getId(),maxPointInDay-pointInDay);
                             updateValueRedis(eventMessageKafka,key,0,maxPointInDay);
