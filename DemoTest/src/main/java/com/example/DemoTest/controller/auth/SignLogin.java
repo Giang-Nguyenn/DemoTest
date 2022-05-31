@@ -40,8 +40,8 @@ public class SignLogin {
     UserService userService;
     @GetMapping("/test")
     String test(){
-        System.out.println("test");
-        return "test success";
+        System.out.println("test 1");
+        return "test success hhhh";
     }
     @PostMapping("/sign")
     public ResponseEntity<UserDTO> sign(@Validated @RequestBody SignRequest sign, BindingResult bindingResult){

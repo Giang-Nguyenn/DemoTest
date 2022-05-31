@@ -1,5 +1,16 @@
 version: '3.8'
 services:
+  db:
+    image: mysql:5.7
+    ports:
+      - '3307:3306'
+#    volumes:
+#      - ~/.docker-conf/mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+#      MYSQL_DATABASE: demotest
+#      MYSQL_USER: bitplay
+#      MYSQL_PASSWORD: bitplay!1@
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     environment:
@@ -13,9 +24,10 @@ services:
     environment:
       KAFKA_ADVERTISED_HOST_NAME: localhost:9092
 #      KAFKA_CREATE_TOPICS: "flight-events:1:1,reported-flight-time-events:1:1,pax-flight-events:1:1"
+      KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:29092
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - zookeeper
   redis:
@@ -24,6 +36,6 @@ services:
       - 6379:6379
     restart: always
 
-  networks:
-    test:
-      driver: bridge
+#  networks:
+#    test:
+#      driver: bridge

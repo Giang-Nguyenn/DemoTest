@@ -1,0 +1,62 @@
+version: "3"
+services:
+  zookeeper:
+    image: 'bitnami/zookeeper:latest'
+    ports:
+      - '2181:2181'
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+  kafka:
+    container_name: kafka
+    image: 'bitnami/kafka:latest'
+    ports:
+      - '9092:9092'
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    depends_on:
+      - zookeeper
+  redis:
+    container_name: redis
+    image: redis
+    ports:
+      - '6379:6379'
+    restart: always
+    
+    
+  db:
+    image: mysql:5.7
+    container_name: db
+    ports:
+      - '3306:3306'
+    volumes:
+      - db_data:/var/lib/mysql
+      #- .:/test-app
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456 
+      MYSQL_DATABASE: db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: 123456
+
+  springboot:
+#    build:
+#      context: ./
+#      dockerfile: Dockerfile
+    image: "springboot:${VERSION}"
+
+    container_name: springboot
+    depends_on:
+      - db
+      - kafka
+      - redis
+    ports:
+      - 8080:8080
+    restart: always
+volumes:
+  db_data:
+
+networks:
+  test:
