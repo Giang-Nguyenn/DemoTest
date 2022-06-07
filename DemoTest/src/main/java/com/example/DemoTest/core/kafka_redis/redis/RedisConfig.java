@@ -30,6 +30,7 @@ public class RedisConfig {
     @Bean
     public JedisConnectionFactory redisConnectionFactory() {
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(redisHost, redisPort);
+        config.setPassword("123456");
         return new JedisConnectionFactory(config);//them confic
     }
 

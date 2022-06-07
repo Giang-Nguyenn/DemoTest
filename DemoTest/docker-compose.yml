@@ -22,6 +22,7 @@ services:
   redis:
     container_name: redis
     image: redis
+    command : redis-server --requirepass 123456
     ports:
       - '6379:6379'
     restart: always
